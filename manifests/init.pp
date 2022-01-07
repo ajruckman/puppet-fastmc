@@ -91,6 +91,16 @@ class fastmc (
     mode    => '0770',
   }
 
+  $attach_script_hash = {
+    'id'        => $id,
+  }
+  file { "/opt/$id/attach.sh":
+    content => epp('fastmc/attach.sh.epp', $attach_script_hash),
+    owner   => 'mc',
+    group   => 'mc',
+    mode    => '0770',
+  }
+
   $server_props_hash = {
     'port' => $port,
   }

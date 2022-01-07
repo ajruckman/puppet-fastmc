@@ -1,0 +1,5 @@
+<%- | $id | -%>
+#!/bin/bash
+
+tmux -S /tmp/tmux-<%= $id %> attach
+
