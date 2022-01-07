@@ -4,6 +4,7 @@ class fastmc (
   $jar,
   $java_version = 17,
   $heap_size    = '1G',
+  $admins       = [],
 ) {
 
   if $java_version == 17 {
@@ -39,9 +40,9 @@ class fastmc (
 
   group { 'mc':
     ensure  => present,
-    members => ['mc'],
+    members => ['mc'] + admins,
   }
- 
+
   firewall { "100 MC $id - Open port $port/TCP":
     ensure => present,
     dport  => $port,
