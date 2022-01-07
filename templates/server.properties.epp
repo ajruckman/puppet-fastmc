@@ -1,0 +1,3 @@
+<%- | $port | -%>
+server-port=<%= $port %>
+query.port=<%= $port %>

@@ -1,0 +1,46 @@
+<%- | $id,
+      $runtime,
+      $heap_size,
+| -%>
+#!/bin/bash
+
+ID=<%= $id %>
+RUNTIME=<%= $runtime %>
+HEAP_SIZE=<%= $heap_size %>
+
+CMD="${RUNTIME} -Xms${HEAP_SIZE} -Xmx${HEAP_SIZE} -XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -Dcom.mojang.eula.agree=true -jar server.jar"
+
+echo "Server command line: ${CMD}"
+
+vmtouch -dl /opt/$ID/world
+
+while true
+do
+
+    pidRunning=$(pgrep -xf "/bin/bash /opt/$ID/start.sh")
+
+    if ! [[ -z "$pidRunning" ]]; then
+        if ! [ "$pidRunning" = $$ ]; then
+            echo "Another instance of this script is already running. Exiting..."
+            echo $pidRunning
+
+            logger Another instance of this script is already running. Exiting...
+            logger $pidRunning
+
+            exit 1
+        fi
+    fi
+
+    cd /opt/$ID
+    ${CMD}
+
+    echo "If you want to completely stop the server process now, press Ctrl+C before the time is up!"
+    echo "Rebooting in:"
+    for i in 5 4 3 2 1
+    do
+        echo "$i..."
+        sleep 1
+    done
+    echo "Rebooting now!"
+done
+

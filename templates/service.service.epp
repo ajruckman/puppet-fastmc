@@ -1,0 +1,15 @@
+<%- | $id| -%>
+[Unit]
+Description=Minecraft Server <%= $id %>
+
+[Service]
+WorkingDirectory=/opt/<%= $id %>
+User=mc
+Type=forking
+
+ExecStart=/usr/bin/tmux -S /tmp/tmux-<%= $id %> new-session -s mc-<%= $id %> -d /opt/<%= $id %>/start.sh
+ExecStop=/bin/kill -9 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
